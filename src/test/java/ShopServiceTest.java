@@ -9,7 +9,7 @@ class ShopServiceTest {
     @Test
     void addOrderTest() {
         //GIVEN
-        ShopService shopService = new ShopService(new ProductRepo(), new OrderMapRepo());
+        ShopService shopService = new ShopService(new ProductRepo(), new OrderMapRepo(), new UUIDIdGenerator());
         List<String> productsIds = List.of("1");
 
         //WHEN
@@ -24,7 +24,7 @@ class ShopServiceTest {
     @Test
     void addOrderTest_whenInvalidProductId_expectThrow() {
         //GIVEN
-        ShopService shopService = new ShopService(new ProductRepo(), new OrderMapRepo());
+        ShopService shopService = new ShopService(new ProductRepo(), new OrderMapRepo(), new UUIDIdGenerator());
         List<String> productsIds = List.of("1", "2");
 
         //THEN
@@ -34,7 +34,7 @@ class ShopServiceTest {
     @Test
     void getOrdersByOrderStatusTest_whenNoOrdersWithStatus_expectEmptyList() {
         //GIVEN
-        ShopService shopService = new ShopService(new ProductRepo(), new OrderMapRepo());
+        ShopService shopService = new ShopService(new ProductRepo(), new OrderMapRepo(), new UUIDIdGenerator());
         OrderStatus orderStatus = OrderStatus.COMPLETED;
 
         //WHEN
@@ -48,7 +48,7 @@ class ShopServiceTest {
     @Test
     void getOrderByOrderStatusTest_whenOrdersWithStatus_expectOnlyOrdersWithStatusInList() {
         //GIVEN
-        ShopService shopService = new ShopService(new ProductRepo(), new OrderMapRepo());
+        ShopService shopService = new ShopService(new ProductRepo(), new OrderMapRepo(), new UUIDIdGenerator());
         OrderStatus orderStatus = OrderStatus.PROCESSING;
         Order addedOrder = shopService.addOrder(List.of("1"));
 
@@ -65,7 +65,7 @@ class ShopServiceTest {
     @Test
     void updateOrderStatusTest() {
         //GIVEN
-        ShopService shopService = new ShopService(new ProductRepo(), new OrderMapRepo());
+        ShopService shopService = new ShopService(new ProductRepo(), new OrderMapRepo(), new UUIDIdGenerator());
         Order addedOrder = shopService.addOrder(List.of("1"));
         OrderStatus newStatus = OrderStatus.IN_DELIVERY;
         String orderId = addedOrder.id();
@@ -81,7 +81,7 @@ class ShopServiceTest {
     @Test
     void updateOrderStatusTest_whenInvalidOrderId_expectThrow() {
         //GIVEN
-        ShopService shopService = new ShopService(new ProductRepo(), new OrderMapRepo());
+        ShopService shopService = new ShopService(new ProductRepo(), new OrderMapRepo(), new UUIDIdGenerator());
         OrderStatus newStatus = OrderStatus.IN_DELIVERY;
         String orderId = "-1";
 
@@ -92,7 +92,7 @@ class ShopServiceTest {
     @Test
     void updateOrderStatusTest_whenNullStatus_expectThrow() {
         //GIVEN
-        ShopService shopService = new ShopService(new ProductRepo(), new OrderMapRepo());
+        ShopService shopService = new ShopService(new ProductRepo(), new OrderMapRepo(), new UUIDIdGenerator());
         Order addedOrder = shopService.addOrder(List.of("1"));
         OrderStatus newStatus = null;
         String orderId = addedOrder.id();
@@ -104,7 +104,7 @@ class ShopServiceTest {
     @Test
     void updateOrderStatusTest_whenNullOrderId_expectThrow() {
         //GIVEN
-        ShopService shopService = new ShopService(new ProductRepo(), new OrderMapRepo());
+        ShopService shopService = new ShopService(new ProductRepo(), new OrderMapRepo(), new UUIDIdGenerator());
         Order addedOrder = shopService.addOrder(List.of("1"));
         OrderStatus newStatus = OrderStatus.IN_DELIVERY;
         String orderId = null;
