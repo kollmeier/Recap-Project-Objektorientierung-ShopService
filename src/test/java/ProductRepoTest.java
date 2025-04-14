@@ -17,7 +17,7 @@ class ProductRepoTest {
 
         //THEN
         List<Product> expected = new ArrayList<>();
-        expected.add(new Product("1", "Apfel"));
+        expected.add(new Product("1", "Apfel", BigDecimal.TEN));
         assertEquals(actual, expected);
     }
 
@@ -31,7 +31,7 @@ class ProductRepoTest {
 
         //THEN
         assertFalse(actualOptional.isEmpty());
-        Product expected = new Product("1", "Apfel");
+        Product expected = new Product("1", "Apfel", BigDecimal.TEN);
         assertEquals(actualOptional.get(), expected);
     }
 
@@ -181,7 +181,7 @@ class ProductRepoTest {
         ProductRepo repo = new ProductRepo();
 
         // WHEN & THEN
-        assertThrows(IllegalArgumentException.class, () -> repo.decreaseQuantity("1", BigDecimal.TWO));
+        assertThrows(IllegalArgumentException.class, () -> repo.decreaseQuantity("1", new BigDecimal(20)));
     }
 
     @org.junit.jupiter.api.Test

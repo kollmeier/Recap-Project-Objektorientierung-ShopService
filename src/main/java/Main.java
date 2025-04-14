@@ -1,7 +1,9 @@
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
 
 public class Main {
     
@@ -14,25 +16,29 @@ public class Main {
         productRepo.addProduct(new Product("3", "Kirsche"));
         productRepo.addProduct(new Product("4", "Banane"));
 
+        productRepo.increaseQuantity("1", BigDecimal.TEN);
+        productRepo.increaseQuantity("2", new BigDecimal("50"));
+        productRepo.increaseQuantity("3", BigDecimal.TEN);
+        productRepo.increaseQuantity("4", BigDecimal.TEN);
 
-        Order order1 = shopService.addOrder(List.of("1", "2"));
-        Order order2 = shopService.addOrder(List.of("3"));
-        Order order3 = shopService.addOrder(List.of("4"));
+        Order order1 = shopService.addOrder(Map.of("1", BigDecimal.ONE, "2", BigDecimal.TEN));
+        Order order2 = shopService.addOrder(Map.of("3", BigDecimal.TWO));
+        Order order3 = shopService.addOrder(Map.of("4", BigDecimal.ONE));
 
         shopService.updateOrderStatus(order1.id(), OrderStatus.IN_DELIVERY);
         shopService.updateOrderStatus(order2.id(), OrderStatus.IN_DELIVERY);
         shopService.updateOrderStatus(order3.id(), OrderStatus.IN_DELIVERY);
 
-        Order order4 = shopService.addOrder(List.of("1", "3"));
-        Order order5 = shopService.addOrder(List.of("2", "4"));
-        Order order6 = shopService.addOrder(List.of("3", "4", "1"));
+        Order order4 = shopService.addOrder(Map.of("1", BigDecimal.ONE, "3", BigDecimal.ONE));
+        Order order5 = shopService.addOrder(Map.of("2", BigDecimal.TWO, "4", BigDecimal.ONE));
+        Order order6 = shopService.addOrder(Map.of("3", BigDecimal.TWO, "4", BigDecimal.ONE, "1", BigDecimal.ONE));
 
         shopService.updateOrderStatus(order4.id(), OrderStatus.COMPLETED);
         shopService.updateOrderStatus(order5.id(), OrderStatus.COMPLETED);
         shopService.updateOrderStatus(order6.id(), OrderStatus.COMPLETED);
 
-        Order order7 = shopService.addOrder(List.of("2"));
-        Order order8 = shopService.addOrder(List.of("1", "4"));
+        Order order7 = shopService.addOrder(Map.of("2", BigDecimal.TWO));
+        Order order8 = shopService.addOrder(Map.of("1", BigDecimal.TWO, "4", BigDecimal.ONE));
         Order oldestDelivery = shopService.getOldestOrderPerStatus(OrderStatus.IN_DELIVERY).orElse(null);
         System.out.println(oldestDelivery);
 

@@ -1,5 +1,6 @@
 import lombok.RequiredArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,13 +42,19 @@ public class TransactionProcessor {
     }
 
     private void processAddOrder(final String[] parts) {
-        if (parts.length < 3) {
+        if (parts.length < 4) {
             throw new RuntimeException("Not enough arguments for addOrder command");
         }
         String alias = parts[1];
-        String[] productIds = new String[parts.length - 2];
-        System.arraycopy(parts, 2, productIds, 0, parts.length - 2);
-        Order order = shopService.addOrder(List.of(productIds));
+        if (parts.length % 2 != 0) {
+            throw new RuntimeException("Invalid number of arguments for addOrder command");
+        }
+        Map<String, BigDecimal> amounts = new HashMap<>();
+        for (int i = 2; i < parts.length; i += 2) {
+            amounts.put(parts[i], new BigDecimal(parts[i + 1]));
+        }
+
+        Order order = shopService.addOrder(amounts);
         aliasedOrders.put(alias, order);
     }
 
