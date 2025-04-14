@@ -1,3 +1,5 @@
+import lombok.NonNull;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,5 +27,15 @@ public class OrderMapRepo implements OrderRepo{
     @Override
     public void removeOrder(String id) {
         orders.remove(id);
+    }
+
+    @Override
+    public Order updateOrder(@NonNull Order order) {
+        if (orders.containsKey(order.id())) {
+            orders.put(order.id(), order);
+            return order;
+        } else {
+            throw new IllegalArgumentException("Order mit der Id: " + order.id() + " konnte nicht aktualisiert werden!");
+        }
     }
 }

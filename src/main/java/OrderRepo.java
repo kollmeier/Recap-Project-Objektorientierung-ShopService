@@ -8,5 +8,7 @@ public interface OrderRepo {
 
     Order addOrder(Order newOrder);
 
+    Order updateOrder(Order order);
+
     void removeOrder(String id);
 }

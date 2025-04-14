@@ -61,4 +61,56 @@ class ShopServiceTest {
         );
         assertEquals(expected, actual);
     }
+
+    @Test
+    void updateOrderStatusTest() {
+        //GIVEN
+        ShopService shopService = new ShopService();
+        Order addedOrder = shopService.addOrder(List.of("1"));
+        OrderStatus newStatus = OrderStatus.IN_DELIVERY;
+        String orderId = addedOrder.id();
+
+        //WHEN
+        Order actual = shopService.updateOrderStatus(orderId, newStatus);
+
+        //THEN
+        Order expected = new Order(orderId, List.of(new Product("1", "Apfel")), newStatus);
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void updateOrderStatusTest_whenInvalidOrderId_expectThrow() {
+        //GIVEN
+        ShopService shopService = new ShopService();
+        OrderStatus newStatus = OrderStatus.IN_DELIVERY;
+        String orderId = "-1";
+
+        //THEN
+        assertThrows(IllegalArgumentException.class, () -> shopService.updateOrderStatus(orderId, newStatus));
+    }
+
+    @Test
+    void updateOrderStatusTest_whenNullStatus_expectThrow() {
+        //GIVEN
+        ShopService shopService = new ShopService();
+        Order addedOrder = shopService.addOrder(List.of("1"));
+        OrderStatus newStatus = null;
+        String orderId = addedOrder.id();
+
+        //THEN
+        assertThrows(NullPointerException.class, () -> shopService.updateOrderStatus(orderId, newStatus));
+    }
+
+    @Test
+    void updateOrderStatusTest_whenNullOrderId_expectThrow() {
+        //GIVEN
+        ShopService shopService = new ShopService();
+        Order addedOrder = shopService.addOrder(List.of("1"));
+        OrderStatus newStatus = OrderStatus.IN_DELIVERY;
+        String orderId = null;
+
+        //THEN
+        assertThrows(NullPointerException.class, () -> shopService.updateOrderStatus(orderId, newStatus));
+    }
+
 }
