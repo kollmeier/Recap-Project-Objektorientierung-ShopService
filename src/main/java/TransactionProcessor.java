@@ -61,7 +61,7 @@ public class TransactionProcessor {
         if (order == null) {
             throw new RuntimeException("Order with alias " + alias + " not found");
         }
-        shopService.updateOrderStatus(order.id(), OrderStatus.valueOf(status));
+        aliasedOrders.put(alias, shopService.updateOrderStatus(order.id(), OrderStatus.valueOf(status)));
 
     }
 
