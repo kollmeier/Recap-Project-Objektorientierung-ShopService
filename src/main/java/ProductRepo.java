@@ -1,3 +1,6 @@
+import lombok.NonNull;
+
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -35,5 +38,15 @@ public class ProductRepo {
                return;
            }
         }
+    }
+
+    public void increaseQuantity(@NonNull String id, @NonNull BigDecimal amount) {
+    }
+
+    public void decreaseQuantity(@NonNull String id, @NonNull BigDecimal amount) {
+    }
+
+    public boolean isInStock(@NonNull String id) {
+        return false;
     }
 }
