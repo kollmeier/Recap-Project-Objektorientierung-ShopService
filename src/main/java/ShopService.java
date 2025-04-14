@@ -1,3 +1,5 @@
+import lombok.NonNull;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -20,6 +22,10 @@ public class ShopService {
         Order newOrder = new Order(UUID.randomUUID().toString(), products, OrderStatus.PROCESSING);
 
         return orderRepo.addOrder(newOrder);
+    }
+
+    public Order updateOrderStatus(@NonNull String orderId, @NonNull OrderStatus newStatus) {
+        return null;
     }
 
     public List<Order> getOrdersByOrderStatus(final OrderStatus orderStatus) {
