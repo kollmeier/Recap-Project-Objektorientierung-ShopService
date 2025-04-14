@@ -74,7 +74,7 @@ class ShopServiceTest {
         Order actual = shopService.updateOrderStatus(orderId, newStatus);
 
         //THEN
-        Order expected = new Order(orderId, List.of(new Product("1", "Apfel")), newStatus);
+        Order expected = new Order(orderId, List.of(new Product("1", "Apfel")), addedOrder.createdAt(), newStatus);
         assertEquals(expected, actual);
     }
 
