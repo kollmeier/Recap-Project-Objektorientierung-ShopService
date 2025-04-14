@@ -2,7 +2,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 import java.util.Map;
 
 public class Main {
@@ -39,6 +38,14 @@ public class Main {
 
         Order order7 = shopService.addOrder(Map.of("2", BigDecimal.TWO));
         Order order8 = shopService.addOrder(Map.of("1", BigDecimal.TWO, "4", BigDecimal.ONE));
+
+        System.out.println("\nIn Stock:");
+        System.out.println(productRepo.getProducts());
+
+        System.out.println("\nOrders:");
+        System.out.println(orderRepo.getOrders());
+
+        System.out.println("\nNext to process per Status:");
         Order oldestDelivery = shopService.getOldestOrderPerStatus(OrderStatus.IN_DELIVERY).orElse(null);
         System.out.println(oldestDelivery);
 
@@ -48,6 +55,7 @@ public class Main {
         Order oldestCompleted = shopService.getOldestOrderPerStatus(OrderStatus.COMPLETED).orElse(null);
         System.out.println(oldestCompleted);
 
+        System.out.println("\n\nRunning transactions");
         TransactionProcessor transactionProcessor = new TransactionProcessor(shopService);
         try {
             transactionProcessor.process(Files.readString(Path.of("src/main/resources/transactions.txt")));
