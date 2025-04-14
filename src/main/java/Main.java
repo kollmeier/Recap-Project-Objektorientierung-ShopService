@@ -1,3 +1,6 @@
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 
 public class Main {
@@ -38,6 +41,13 @@ public class Main {
 
         Order oldestCompleted = shopService.getOldestOrderPerStatus(OrderStatus.COMPLETED).orElse(null);
         System.out.println(oldestCompleted);
+
+        TransactionProcessor transactionProcessor = new TransactionProcessor(shopService);
+        try {
+            transactionProcessor.process(Files.readString(Path.of("src/main/resources/transactions.txt")));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }
