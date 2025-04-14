@@ -15,6 +15,29 @@ public class Main {
         Order order1 = shopService.addOrder(List.of("1", "2"));
         Order order2 = shopService.addOrder(List.of("3"));
         Order order3 = shopService.addOrder(List.of("4"));
+
+        shopService.updateOrderStatus(order1.id(), OrderStatus.IN_DELIVERY);
+        shopService.updateOrderStatus(order2.id(), OrderStatus.IN_DELIVERY);
+        shopService.updateOrderStatus(order3.id(), OrderStatus.IN_DELIVERY);
+
+        Order order4 = shopService.addOrder(List.of("1", "3"));
+        Order order5 = shopService.addOrder(List.of("2", "4"));
+        Order order6 = shopService.addOrder(List.of("3", "4", "1"));
+
+        shopService.updateOrderStatus(order4.id(), OrderStatus.COMPLETED);
+        shopService.updateOrderStatus(order5.id(), OrderStatus.COMPLETED);
+        shopService.updateOrderStatus(order6.id(), OrderStatus.COMPLETED);
+
+        Order order7 = shopService.addOrder(List.of("2"));
+        Order order8 = shopService.addOrder(List.of("1", "4"));
+        Order oldestDelivery = shopService.getOldestOrderPerStatus(OrderStatus.IN_DELIVERY).orElse(null);
+        System.out.println(oldestDelivery);
+
+        Order oldestProcessing = shopService.getOldestOrderPerStatus(OrderStatus.PROCESSING).orElse(null);
+        System.out.println(oldestProcessing);
+
+        Order oldestCompleted = shopService.getOldestOrderPerStatus(OrderStatus.COMPLETED).orElse(null);
+        System.out.println(oldestCompleted);
     }
 
 }

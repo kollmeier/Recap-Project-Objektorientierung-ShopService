@@ -1,10 +1,7 @@
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @RequiredArgsConstructor
 public class ShopService {
@@ -37,5 +34,13 @@ public class ShopService {
 
     public List<Order> getOrdersByOrderStatus(final OrderStatus orderStatus) {
         return orderRepo.getOrders().stream().filter(order -> order.status().equals(orderStatus)).toList();
+    }
+
+    public Optional<Order> getOldestOrderPerStatus(final OrderStatus orderStatus) {
+        List<Order> orders = getOrdersByOrderStatus(orderStatus);
+        if (orders.isEmpty()) {
+            return Optional.empty();
+        }
+        return orders.stream().min(Comparator.comparing(Order::createdAt));
     }
 }
