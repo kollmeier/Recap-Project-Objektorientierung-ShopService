@@ -1,6 +1,9 @@
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -10,13 +13,14 @@ class ShopServiceTest {
     void addOrderTest() {
         //GIVEN
         ShopService shopService = new ShopService(new ProductRepo(), new OrderMapRepo(), new UUIDIdGenerator());
-        List<String> productsIds = List.of("1");
+        Map<String, BigDecimal> amounts = new HashMap<>();
+        amounts.put("1", BigDecimal.ONE);
 
         //WHEN
-        Order actual = shopService.addOrder(productsIds);
+        Order actual = shopService.addOrder(amounts);
 
         //THEN
-        Order expected = new Order("-1", List.of(new Product("1", "Apfel")), OrderStatus.PROCESSING);
+        Order expected = new Order("-1", List.of(new Product("1", "Apfel", BigDecimal.TEN)), OrderStatus.PROCESSING);
         assertEquals(expected.products(), actual.products());
         assertNotNull(expected.id());
     }
@@ -25,10 +29,13 @@ class ShopServiceTest {
     void addOrderTest_whenInvalidProductId_expectThrow() {
         //GIVEN
         ShopService shopService = new ShopService(new ProductRepo(), new OrderMapRepo(), new UUIDIdGenerator());
-        List<String> productsIds = List.of("1", "2");
+        Map<String, BigDecimal> amounts = new HashMap<>();
+        amounts.put("1", BigDecimal.ONE);
+        amounts.put("2", BigDecimal.ONE);
+
 
         //THEN
-        assertThrows(IllegalArgumentException.class, () -> shopService.addOrder(productsIds));
+        assertThrows(IllegalArgumentException.class, () -> shopService.addOrder(amounts));
     }
 
     @Test
@@ -50,7 +57,9 @@ class ShopServiceTest {
         //GIVEN
         ShopService shopService = new ShopService(new ProductRepo(), new OrderMapRepo(), new UUIDIdGenerator());
         OrderStatus orderStatus = OrderStatus.PROCESSING;
-        Order addedOrder = shopService.addOrder(List.of("1"));
+        Map<String, BigDecimal> amounts = new HashMap<>();
+        amounts.put("1", BigDecimal.ONE);
+        Order addedOrder = shopService.addOrder(amounts);
 
         //WHEN
         List<Order> actual = shopService.getOrdersByOrderStatus(orderStatus);
@@ -66,7 +75,9 @@ class ShopServiceTest {
     void updateOrderStatusTest() {
         //GIVEN
         ShopService shopService = new ShopService(new ProductRepo(), new OrderMapRepo(), new UUIDIdGenerator());
-        Order addedOrder = shopService.addOrder(List.of("1"));
+        Map<String, BigDecimal> amounts = new HashMap<>();
+        amounts.put("1", BigDecimal.ONE);
+        Order addedOrder = shopService.addOrder(amounts);
         OrderStatus newStatus = OrderStatus.IN_DELIVERY;
         String orderId = addedOrder.id();
 
@@ -74,7 +85,7 @@ class ShopServiceTest {
         Order actual = shopService.updateOrderStatus(orderId, newStatus);
 
         //THEN
-        Order expected = new Order(orderId, List.of(new Product("1", "Apfel")), addedOrder.createdAt(), newStatus);
+        Order expected = new Order(orderId, List.of(new Product("1", "Apfel", BigDecimal.TEN)), addedOrder.createdAt(), newStatus);
         assertEquals(expected, actual);
     }
 
@@ -93,7 +104,9 @@ class ShopServiceTest {
     void updateOrderStatusTest_whenNullStatus_expectThrow() {
         //GIVEN
         ShopService shopService = new ShopService(new ProductRepo(), new OrderMapRepo(), new UUIDIdGenerator());
-        Order addedOrder = shopService.addOrder(List.of("1"));
+        Map<String, BigDecimal> amounts = new HashMap<>();
+        amounts.put("1", BigDecimal.ONE);
+        Order addedOrder = shopService.addOrder(amounts);
         OrderStatus newStatus = null;
         String orderId = addedOrder.id();
 
@@ -105,7 +118,9 @@ class ShopServiceTest {
     void updateOrderStatusTest_whenNullOrderId_expectThrow() {
         //GIVEN
         ShopService shopService = new ShopService(new ProductRepo(), new OrderMapRepo(), new UUIDIdGenerator());
-        Order addedOrder = shopService.addOrder(List.of("1"));
+        Map<String, BigDecimal> amounts = new HashMap<>();
+        amounts.put("1", BigDecimal.ONE);
+        Order addedOrder = shopService.addOrder(amounts);
         OrderStatus newStatus = OrderStatus.IN_DELIVERY;
         String orderId = null;
 

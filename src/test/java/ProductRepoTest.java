@@ -1,3 +1,6 @@
+import org.junit.jupiter.api.Test;
+
+import java.math.BigDecimal;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -14,7 +17,7 @@ class ProductRepoTest {
 
         //THEN
         List<Product> expected = new ArrayList<>();
-        expected.add(new Product("1", "Apfel"));
+        expected.add(new Product("1", "Apfel", BigDecimal.TEN));
         assertEquals(actual, expected);
     }
 
@@ -28,7 +31,7 @@ class ProductRepoTest {
 
         //THEN
         assertFalse(actualOptional.isEmpty());
-        Product expected = new Product("1", "Apfel");
+        Product expected = new Product("1", "Apfel", BigDecimal.TEN);
         assertEquals(actualOptional.get(), expected);
     }
 
@@ -60,6 +63,20 @@ class ProductRepoTest {
     }
 
     @org.junit.jupiter.api.Test
+    void addProduct_whenNewProductIsAdded_thenQuantityIsZero() {
+        //GIVEN
+        ProductRepo repo = new ProductRepo();
+        Product newProduct = new Product("2", "Banane");
+
+        //WHEN
+        Product actual = repo.addProduct(newProduct);
+
+        //THEN
+        BigDecimal expected = BigDecimal.ZERO;
+        assertEquals(repo.getProductById("2").orElse(new Product("-1", "no").withQuantity(BigDecimal.TEN)).quantity(), BigDecimal.ZERO);
+    }
+
+    @org.junit.jupiter.api.Test
     void removeProduct() {
         //GIVEN
         ProductRepo repo = new ProductRepo();
@@ -69,5 +86,115 @@ class ProductRepoTest {
 
         //THEN
         assertTrue(repo.getProductById("1").isEmpty());
+    }
+    
+
+    @org.junit.jupiter.api.Test
+    void increaseQuantity() {
+        // GIVEN
+        ProductRepo repo = new ProductRepo();
+        Product existingProduct = new Product("2", "Apfel", BigDecimal.ONE);
+        repo.addProduct(existingProduct);
+
+        // WHEN
+        repo.increaseQuantity("2", new BigDecimal("2"));
+
+        // THEN
+        Product updatedProduct = repo.getProductById("2").orElse(null);
+        assertNotNull(updatedProduct);
+        assertEquals(new BigDecimal("3"), updatedProduct.quantity());
+    }
+    
+    @Test
+    void increaseQuantity_whenIdNull_thenThrowException() {
+        // GIVEN
+        ProductRepo repo = new ProductRepo();
+
+        // WHEN & THEN
+        assertThrows(NullPointerException.class, () -> repo.increaseQuantity(null, new BigDecimal("2")));
+    }
+
+    @Test
+    void increaseQuantity_whenProductNotExists_thenThrowException() {
+        // GIVEN
+        ProductRepo repo = new ProductRepo();
+
+        // WHEN & THEN
+        assertThrows(NoSuchElementException.class, () -> repo.increaseQuantity("2", new BigDecimal("2")));
+    }
+
+    @Test
+    void increaseQuantity_whenAmountNull_thenThrowException() {
+        // GIVEN
+        ProductRepo repo = new ProductRepo();
+
+        // WHEN & THEN
+        assertThrows(NullPointerException.class, () -> repo.increaseQuantity("1", null));
+    }
+
+    @Test
+    void increaseQuantity_whenAmountNegative_thenThrowException() {
+        // GIVEN
+        ProductRepo repo = new ProductRepo();
+
+        // WHEN & THEN
+        assertThrows(IllegalArgumentException.class, () -> repo.increaseQuantity("1", new BigDecimal(-1)));
+    }
+
+    @org.junit.jupiter.api.Test
+    void decreaseQuantity() {
+        // GIVEN
+        ProductRepo repo = new ProductRepo();
+        Product existingProduct = new Product("2", "Apfel", new BigDecimal("5"));
+        repo.addProduct(existingProduct);
+
+        // WHEN
+        repo.decreaseQuantity("2", new BigDecimal("2"));
+
+        // THEN
+        Product updatedProduct = repo.getProductById("2").orElse(null);
+        assertNotNull(updatedProduct);
+        assertEquals(new BigDecimal("3"), updatedProduct.quantity());
+    }
+
+    @Test
+    void decreaseQuantity_whenAmountNull_thenThrowException() {
+        // GIVEN
+        ProductRepo repo = new ProductRepo();
+
+        // WHEN & THEN
+        assertThrows(NullPointerException.class, () -> repo.decreaseQuantity("1", null));
+    }
+
+    @Test
+    void decreaseQuantity_whenProductNotExists_thenThrowException() {
+        // GIVEN
+        ProductRepo repo = new ProductRepo();
+
+        // WHEN & THEN
+        assertThrows(NoSuchElementException.class, () -> repo.decreaseQuantity("2", new BigDecimal("2")));
+    }
+
+    @Test
+    void decreaseQuantity_whenAmountBiggerThanQuantity_thenThrowException() {
+        // GIVEN
+        ProductRepo repo = new ProductRepo();
+
+        // WHEN & THEN
+        assertThrows(IllegalArgumentException.class, () -> repo.decreaseQuantity("1", new BigDecimal(20)));
+    }
+
+    @org.junit.jupiter.api.Test
+    void isInStock() {
+        // GIVEN
+        ProductRepo repo = new ProductRepo();
+        Product inStockProduct = new Product("3", "Apfel", new BigDecimal("5"));
+        Product outOfStockProduct = new Product("2", "Banane", BigDecimal.ZERO);
+        repo.addProduct(inStockProduct);
+        repo.addProduct(outOfStockProduct);
+
+        // WHEN & THEN
+        assertTrue(repo.isInStock("3"));
+        assertFalse(repo.isInStock("2"));
     }
 }
