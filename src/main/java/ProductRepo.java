@@ -41,12 +41,28 @@ public class ProductRepo {
     }
 
     public void increaseQuantity(@NonNull String id, @NonNull BigDecimal amount) {
+        if (amount.compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("Amount must not be negative");
+        }
+        Product product = getProductById(id).orElseThrow();
+        removeProduct(product.id());
+        addProduct(product.withQuantity(product.quantity().add(amount)));
     }
 
     public void decreaseQuantity(@NonNull String id, @NonNull BigDecimal amount) {
+        if (amount.compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("Amount must not be negative");
+        }
+        Product product = getProductById(id).orElseThrow();
+        if (product.quantity().compareTo(amount) < 0) {
+            throw new IllegalArgumentException("Not enough stock");
+        }
+        removeProduct(product.id());
+        addProduct(product.withQuantity(product.quantity().subtract(amount)));
     }
 
     public boolean isInStock(@NonNull String id) {
-        return false;
+        Product product = getProductById(id).orElseThrow();
+        return product.quantity().compareTo(BigDecimal.ZERO) > 0;
     }
 }
