@@ -1,5 +1,6 @@
 import lombok.NonNull;
 
+import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +22,7 @@ public class OrderListRepo implements OrderRepo{
     }
 
     public Order addOrder(Order newOrder) {
-        Order placedOrder = newOrder.withCreatedAt(ZonedDateTime.now());
+        Order placedOrder = newOrder.withCreatedAt(Instant.now());
         orders.add(placedOrder);
         return placedOrder;
     }

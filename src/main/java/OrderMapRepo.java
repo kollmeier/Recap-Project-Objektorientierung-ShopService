@@ -1,5 +1,6 @@
 import lombok.NonNull;
 
+import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,7 +22,7 @@ public class OrderMapRepo implements OrderRepo{
 
     @Override
     public Order addOrder(Order newOrder) {
-        Order placedOrder = newOrder.withCreatedAt(ZonedDateTime.now());
+        Order placedOrder = newOrder.withCreatedAt(Instant.now());
         orders.put(newOrder.id(), placedOrder);
         return placedOrder;
     }
