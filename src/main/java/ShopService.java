@@ -25,7 +25,11 @@ public class ShopService {
     }
 
     public Order updateOrderStatus(@NonNull String orderId, @NonNull OrderStatus newStatus) {
-        return null;
+        Order order = orderRepo.getOrderById(orderId);
+        if (order == null) {
+            throw new IllegalArgumentException("Order mit der Id: " + orderId + " konnte nicht aktualisiert werden!");
+        }
+        return orderRepo.updateOrder(order.withStatus(newStatus));
     }
 
     public List<Order> getOrdersByOrderStatus(final OrderStatus orderStatus) {
