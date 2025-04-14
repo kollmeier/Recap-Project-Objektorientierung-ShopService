@@ -14,7 +14,7 @@ class OrderListRepoTest {
 
         Product product = new Product("1", "Apfel");
         Order newOrder = new Order("1", List.of(product), OrderStatus.PROCESSING);
-        repo.addOrder(newOrder);
+        Order addedOrder = repo.addOrder(newOrder);
 
         //WHEN
         List<Order> actual = repo.getOrders();
@@ -22,7 +22,7 @@ class OrderListRepoTest {
         //THEN
         List<Order> expected = new ArrayList<>();
         Product product1 = new Product("1", "Apfel");
-        expected.add(new Order("1", List.of(product1), OrderStatus.PROCESSING));
+        expected.add(new Order("1", List.of(product1), addedOrder.createdAt(), OrderStatus.PROCESSING));
 
         assertEquals(actual, expected);
     }
@@ -34,14 +34,14 @@ class OrderListRepoTest {
 
         Product product = new Product("1", "Apfel");
         Order newOrder = new Order("1", List.of(product), OrderStatus.PROCESSING);
-        repo.addOrder(newOrder);
+        Order addedOrder = repo.addOrder(newOrder);
 
         //WHEN
         Order actual = repo.getOrderById("1");
 
         //THEN
         Product product1 = new Product("1", "Apfel");
-        Order expected = new Order("1", List.of(product1), OrderStatus.PROCESSING);
+        Order expected = new Order("1", List.of(product1), addedOrder.createdAt(), OrderStatus.PROCESSING);
 
         assertEquals(actual, expected);
     }
@@ -58,7 +58,7 @@ class OrderListRepoTest {
 
         //THEN
         Product product1 = new Product("1", "Apfel");
-        Order expected = new Order("1", List.of(product1), OrderStatus.PROCESSING);
+        Order expected = new Order("1", List.of(product1), OrderStatus.PROCESSING).withCreatedAt(actual.createdAt());
         assertEquals(actual, expected);
         assertEquals(repo.getOrderById("1"), expected);
     }
