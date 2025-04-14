@@ -1,3 +1,5 @@
+import lombok.NonNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +34,14 @@ public class OrderListRepo implements OrderRepo{
     }
 
     @Override
-    public Order updateOrder(Order order) {
-        return null;
+    public Order updateOrder(@NonNull Order order) {
+        for (Order existingOrder : orders) {
+            if (existingOrder.id().equals(order.id())) {
+                orders.remove(existingOrder);
+                orders.add(order);
+                return order;
+            }
+        }
+        throw new IllegalArgumentException("Order mit der Id: " + order.id() + " konnte nicht aktualisiert werden!");
     }
 }
