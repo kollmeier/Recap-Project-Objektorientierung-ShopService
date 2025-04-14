@@ -23,6 +23,6 @@ public class ShopService {
     }
 
     public List<Order> getOrdersByOrderStatus(final OrderStatus orderStatus) {
-        return new ArrayList<>();
+        return orderRepo.getOrders().stream().filter(order -> order.status().equals(orderStatus)).toList();
     }
 }
