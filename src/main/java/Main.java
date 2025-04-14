@@ -5,7 +5,8 @@ public class Main {
     public static void main(String[] args) {
         ProductRepo productRepo = new ProductRepo();
         OrderRepo orderRepo = new OrderMapRepo();
-        ShopService shopService = new ShopService(productRepo, orderRepo);
+        IdGenerator idGenerator = new UUIDIdGenerator();
+        ShopService shopService = new ShopService(productRepo, orderRepo, idGenerator);
         productRepo.addProduct(new Product("2", "Birne"));
         productRepo.addProduct(new Product("3", "Kirsche"));
         productRepo.addProduct(new Product("4", "Banane"));
