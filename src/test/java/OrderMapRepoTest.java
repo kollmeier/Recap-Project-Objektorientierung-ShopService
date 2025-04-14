@@ -74,4 +74,45 @@ class OrderMapRepoTest {
         //THEN
         assertNull(repo.getOrderById("1"));
     }
+
+    @Test
+    void updateOrderThrowsNullPointerExceptionIfParameterIsNull() {
+        //GIVEN
+        OrderMapRepo repo = new OrderMapRepo();
+
+        //WHEN & THEN
+        assertThrows(NullPointerException.class, () -> repo.updateOrder(null));
+    }
+
+    @Test
+    void updateOrderThrowsIllegalArgumentExceptionIfOrderNotExists() {
+        //GIVEN
+        OrderMapRepo repo = new OrderMapRepo();
+
+        Product product = new Product("1", "Apfel");
+        Order order = new Order("1", List.of(product), OrderStatus.PROCESSING);
+
+        //WHEN & THEN
+        assertThrows(IllegalArgumentException.class, () -> repo.updateOrder(order));
+    }
+
+    @Test
+    void updateOrderReturnsUpdatedOrder() {
+        //GIVEN
+        OrderMapRepo repo = new OrderMapRepo();
+
+        Product product = new Product("1", "Apfel");
+        Order order = new Order("1", List.of(product), OrderStatus.PROCESSING);
+        repo.addOrder(order);
+
+        Product product2 = new Product("2", "Banane");
+        Order updatedOrder = new Order("1", List.of(product2), OrderStatus.PROCESSING);
+
+        //WHEN
+        repo.updateOrder(updatedOrder);
+        Order actual = repo.getOrderById("1");
+
+        //THEN
+        assertEquals(actual, updatedOrder);
+    }
 }
