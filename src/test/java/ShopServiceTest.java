@@ -33,4 +33,35 @@ class ShopServiceTest {
         //THEN
         assertNull(actual);
     }
+
+    @Test
+    void getOrdersByOrderStatusTest_whenNoOrdersWithStatus_expectEmptyList() {
+        //GIVEN
+        ShopService shopService = new ShopService();
+        OrderStatus orderStatus = OrderStatus.COMPLETED;
+
+        //WHEN
+        List<Order> actual = shopService.getOrdersByOrderStatus(orderStatus);
+
+        //THEN
+        List<Order> expected = List.of();
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void getOrderByOrderStatusTest_whenOrdersWithStatus_expectOnlyOrdersWithStatusInList() {
+        //GIVEN
+        ShopService shopService = new ShopService();
+        OrderStatus orderStatus = OrderStatus.PROCESSING;
+        Order addedOrder = shopService.addOrder(List.of("1"));
+
+        //WHEN
+        List<Order> actual = shopService.getOrdersByOrderStatus(orderStatus);
+
+        //THEN
+        List<Order> expected = List.of(
+                addedOrder
+        );
+        assertEquals(expected, actual);
+    }
 }
