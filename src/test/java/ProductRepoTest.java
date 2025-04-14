@@ -93,14 +93,14 @@ class ProductRepoTest {
     void increaseQuantity() {
         // GIVEN
         ProductRepo repo = new ProductRepo();
-        Product existingProduct = new Product("1", "Apfel", BigDecimal.ONE);
+        Product existingProduct = new Product("2", "Apfel", BigDecimal.ONE);
         repo.addProduct(existingProduct);
 
         // WHEN
-        repo.increaseQuantity("1", new BigDecimal("2"));
+        repo.increaseQuantity("2", new BigDecimal("2"));
 
         // THEN
-        Product updatedProduct = repo.getProductById("1").orElse(null);
+        Product updatedProduct = repo.getProductById("2").orElse(null);
         assertNotNull(updatedProduct);
         assertEquals(new BigDecimal("3"), updatedProduct.quantity());
     }
@@ -112,6 +112,15 @@ class ProductRepoTest {
 
         // WHEN & THEN
         assertThrows(NullPointerException.class, () -> repo.increaseQuantity(null, new BigDecimal("2")));
+    }
+
+    @Test
+    void increaseQuantity_whenProductNotExists_thenThrowException() {
+        // GIVEN
+        ProductRepo repo = new ProductRepo();
+
+        // WHEN & THEN
+        assertThrows(NoSuchElementException.class, () -> repo.increaseQuantity("2", new BigDecimal("2")));
     }
 
     @Test
@@ -136,14 +145,14 @@ class ProductRepoTest {
     void decreaseQuantity() {
         // GIVEN
         ProductRepo repo = new ProductRepo();
-        Product existingProduct = new Product("1", "Apfel", new BigDecimal("5"));
+        Product existingProduct = new Product("2", "Apfel", new BigDecimal("5"));
         repo.addProduct(existingProduct);
 
         // WHEN
-        repo.decreaseQuantity("1", new BigDecimal("2"));
+        repo.decreaseQuantity("2", new BigDecimal("2"));
 
         // THEN
-        Product updatedProduct = repo.getProductById("1").orElse(null);
+        Product updatedProduct = repo.getProductById("2").orElse(null);
         assertNotNull(updatedProduct);
         assertEquals(new BigDecimal("3"), updatedProduct.quantity());
     }
@@ -158,25 +167,34 @@ class ProductRepoTest {
     }
 
     @Test
+    void decreaseQuantity_whenProductNotExists_thenThrowException() {
+        // GIVEN
+        ProductRepo repo = new ProductRepo();
+
+        // WHEN & THEN
+        assertThrows(NoSuchElementException.class, () -> repo.decreaseQuantity("2", new BigDecimal("2")));
+    }
+
+    @Test
     void decreaseQuantity_whenAmountBiggerThanQuantity_thenThrowException() {
         // GIVEN
         ProductRepo repo = new ProductRepo();
 
         // WHEN & THEN
-        assertThrows(NullPointerException.class, () -> repo.decreaseQuantity("1", BigDecimal.TWO));
+        assertThrows(IllegalArgumentException.class, () -> repo.decreaseQuantity("1", BigDecimal.TWO));
     }
 
     @org.junit.jupiter.api.Test
     void isInStock() {
         // GIVEN
         ProductRepo repo = new ProductRepo();
-        Product inStockProduct = new Product("1", "Apfel", new BigDecimal("5"));
+        Product inStockProduct = new Product("3", "Apfel", new BigDecimal("5"));
         Product outOfStockProduct = new Product("2", "Banane", BigDecimal.ZERO);
         repo.addProduct(inStockProduct);
         repo.addProduct(outOfStockProduct);
 
         // WHEN & THEN
-        assertTrue(repo.isInStock("1"));
+        assertTrue(repo.isInStock("3"));
         assertFalse(repo.isInStock("2"));
     }
 }
